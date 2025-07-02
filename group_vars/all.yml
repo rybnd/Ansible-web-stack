@@ -1,0 +1,5 @@
+ansible_user: ubuntu
+
+# Shared variables
+domain: "example.local"
+ssl_enabled: true
