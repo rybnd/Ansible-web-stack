@@ -1,0 +1,25 @@
+---
+- name: Install PostgreSQL
+  apt:
+    name: postgresql
+    state: present
+
+- name: Ensure PostgreSQL is running
+  service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Set up database
+  become_user: postgres
+  block:
+    - name: Create database user
+      postgresql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        role_attr_flags: LOGIN
+
+    - name: Create database
+      postgresql_db:
+        name: "{{ db_name }}"
+        owner: "{{ db_user }}"
