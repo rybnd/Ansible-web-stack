@@ -1,0 +1,28 @@
+name: "Ansible Lint & Syntax CI"
+on:
+  push:
+    paths:
+      - '**.yml'
+      - '**.yaml'
+      - 'roles/**'
+  pull_request:
+    paths:
+      - '**.yml'
+      - '**.yaml'
+      - 'roles/**'
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install Ansible & Lint
+        run: |
+          pip install ansible ansible-lint
+      - name: Lint Ansible Playbooks
+        run: ansible-lint site.yml deploy.yml
+      - name: Check Playbook Syntax
+        run: ansible-playbook --syntax-check site.yml deploy.yml
