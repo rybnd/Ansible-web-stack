@@ -1,0 +1,25 @@
+---
+- name: Zero-downtime application deployment
+  hosts: appservers
+  become: yes
+  serial: 1
+  tasks:
+    - name: Pull latest code
+      git:
+        repo: "{{ app_repo_url }}"
+        dest: "{{ app_dir }}"
+        version: main
+
+    - name: Restart app service
+      systemd:
+        name: "{{ app_service }}"
+        state: restarted
+
+    - name: Health check
+      uri:
+        url: "http://localhost:{{ app_port }}/health"
+        status_code: 200
+      register: health
+      until: health.status == 200
+      retries: 5
+      delay: 3
