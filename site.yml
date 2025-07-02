@@ -1,0 +1,10 @@
+---
+- name: Provision and configure complete web stack
+  hosts: all
+  become: yes
+  roles:
+    - role: common
+    - role: security
+    - role: db
+    - role: app
+    - role: nginx
